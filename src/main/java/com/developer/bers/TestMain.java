@@ -6,10 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestMain {
+    public TestMain() {
+        main();
+    }
 
-    static List list = new ArrayList<>();
+    public List getList() {
+        return list;
+    }
 
-    public static void main(String[] args) {
+    public List list = new ArrayList<>();
+
+    public void main() {
         list.add("nameOfGood");
         list.add("date");
         list.add("time");
@@ -21,8 +28,6 @@ public class TestMain {
         list.add("count");
         list.add("lot");
 
-
-        run();
     }
 
     private static void run() {

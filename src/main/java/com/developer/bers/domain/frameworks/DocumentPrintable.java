@@ -1,7 +1,9 @@
 package com.developer.bers.domain.frameworks;
 
+import com.developer.bers.TestMain;
 import com.developer.bers.domain.models.CustomField;
 import com.developer.bers.domain.repositories.PrintDocumentRepository;
+import com.developer.bers.helpers.CurrentWorkingDirectory;
 import org.apache.poi.xwpf.usermodel.*;
 
 import javax.swing.*;
@@ -15,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class DocumentPrintable implements Printable, PrintDocumentRepository {
 
@@ -35,10 +38,65 @@ public class DocumentPrintable implements Printable, PrintDocumentRepository {
         return PAGE_EXISTS;
     }
 
+    private XWPFDocument getDoc (List<CustomField> listOfCustomField){
+
+        String str = new TestMain().getList().get(0).toString();
+
+        XWPFDocument doc = null;
+        String dir = new CurrentWorkingDirectory().getDir() + "\\files\\input\\input.docx";
+
+        try (FileInputStream fis = new FileInputStream(dir)) {
+            doc = new XWPFDocument(fis);
+
+            for (XWPFParagraph paragraph : doc.getParagraphs()) {
+                List<XWPFRun> runs = paragraph.getRuns();
+                for (XWPFRun run : runs) {
+                    String text = run.getText(0);
+                    if (text != null && text.contains(str)) {
+                        String updatedRunText = text.replace(text, "new Text");
+                        run.setText(updatedRunText, 0);
+                    }
+                }
+            }
+
+            for (XWPFTable table : doc.getTables()) {
+                for (XWPFTableRow row : table.getRows()) {
+                    for (XWPFTableCell cell : row.getTableCells()) {
+                        for (XWPFParagraph paragraph : cell.getParagraphs()) {
+                            String text = paragraph.getText();
+                            if (text.contains("  ")) {
+//                                listParagraphs.addAll(splitTextByItems(text));
+                            } else {
+//                                listParagraphs.add(paragraph.getText());
+                            }
+                        }
+                    }
+                }
+            }
+
+            System.out.println("Text replaced and new document saved successfully!");
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return doc;
+    }
+
     @Override
     public void printDoc(List<CustomField> listOfCustomField, XWPFDocument document, String outputPath) {
 
-        XWPFDocument newDoc = new XWPFDocument();
+
+
+        XWPFDocument someDoc = getDoc(listOfCustomField);
+
+
+        // Создание параграфа
+        XWPFParagraph paragraph = someDoc.createParagraph();
+
+        // Добавление строки текста в параграф
+        XWPFRun run = paragraph.createRun();
+        run.setText("This is a line of text in the document.");
 
 
         // Обновление содержимого документа
@@ -46,7 +104,7 @@ public class DocumentPrintable implements Printable, PrintDocumentRepository {
 
         // Сохранение документа
         try (FileOutputStream out = new FileOutputStream(outputPath)) {
-            newDoc.write(out);
+            someDoc.write(out);
             System.out.println("Document created successfully!");
         } catch (IOException e) {
             e.printStackTrace();
@@ -108,19 +166,6 @@ public class DocumentPrintable implements Printable, PrintDocumentRepository {
                 }
             }
         }
-
-        // Save the updated document
-//        try (FileOutputStream fos = new FileOutputStream(outputPath)) {
-//            newDoc.createParagraph().createRun().setText("This is a new paragraph.");
-//
-//            // Write changes to the file
-//            fos.close();
-//            newDoc.close();
-//
-//            // Important: Don't close the document manually if you're using try-with-resources
-//        } catch (IOException e) {
-//            throw new RuntimeException("Failed to write document", e);
-//        }
     }
 
 
