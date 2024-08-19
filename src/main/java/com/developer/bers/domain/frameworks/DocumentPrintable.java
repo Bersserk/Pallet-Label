@@ -4,6 +4,7 @@ import com.developer.bers.TestMain;
 import com.developer.bers.domain.models.CustomField;
 import com.developer.bers.domain.repositories.PrintDocumentRepository;
 import com.developer.bers.helpers.CurrentWorkingDirectory;
+import com.developer.bers.presentation.surfaces.CustomRow;
 import org.apache.poi.xwpf.usermodel.*;
 
 import javax.swing.*;
@@ -17,7 +18,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 public class DocumentPrintable implements Printable, PrintDocumentRepository {
 
@@ -38,7 +38,7 @@ public class DocumentPrintable implements Printable, PrintDocumentRepository {
         return PAGE_EXISTS;
     }
 
-    private XWPFDocument getDoc (List<CustomField> listOfCustomField){
+    private XWPFDocument getDoc(List<CustomRow> listOfCustomRows) {
 
         String str = new TestMain().getList().get(0).toString();
 
@@ -52,10 +52,13 @@ public class DocumentPrintable implements Printable, PrintDocumentRepository {
                 List<XWPFRun> runs = paragraph.getRuns();
                 for (XWPFRun run : runs) {
                     String text = run.getText(0);
-                    if (text != null && text.contains(str)) {
-                        String updatedRunText = text.replace(text, "new Text");
-                        run.setText(updatedRunText, 0);
-                    }
+
+                    listOfCustomRows.forEach(it -> {
+                        if (text != null && text.contains(it.textLabel().getText())) {
+                            String updatedRunText = text.replace(text, it.customField().getText());
+                            run.setText(updatedRunText, 0);
+                        }
+                    });
                 }
             }
 
@@ -63,11 +66,16 @@ public class DocumentPrintable implements Printable, PrintDocumentRepository {
                 for (XWPFTableRow row : table.getRows()) {
                     for (XWPFTableCell cell : row.getTableCells()) {
                         for (XWPFParagraph paragraph : cell.getParagraphs()) {
-                            String text = paragraph.getText();
-                            if (text.contains("  ")) {
-//                                listParagraphs.addAll(splitTextByItems(text));
-                            } else {
-//                                listParagraphs.add(paragraph.getText());
+                            List<XWPFRun> runs = paragraph.getRuns();
+                            for (XWPFRun run : runs) {
+                                String text = run.getText(0);
+
+                                listOfCustomRows.forEach(it -> {
+                                    if (text != null && text.contains(it.textLabel().getText())) {
+                                        String updatedRunText = text.replace(text, it.customField().getText());
+                                        run.setText(updatedRunText, 0);
+                                    }
+                                });
                             }
                         }
                     }
@@ -84,23 +92,11 @@ public class DocumentPrintable implements Printable, PrintDocumentRepository {
     }
 
     @Override
-    public void printDoc(List<CustomField> listOfCustomField, XWPFDocument document, String outputPath) {
+    public void printDoc(List<CustomRow> listOfCustomRows, XWPFDocument document, String outputPath) {
 
 
+        XWPFDocument someDoc = getDoc(listOfCustomRows);
 
-        XWPFDocument someDoc = getDoc(listOfCustomField);
-
-
-        // Создание параграфа
-        XWPFParagraph paragraph = someDoc.createParagraph();
-
-        // Добавление строки текста в параграф
-        XWPFRun run = paragraph.createRun();
-        run.setText("This is a line of text in the document.");
-
-
-        // Обновление содержимого документа
-//        newTextInParagraph(listOfCustomField, newDoc, outputPath);
 
         // Сохранение документа
         try (FileOutputStream out = new FileOutputStream(outputPath)) {
@@ -168,33 +164,4 @@ public class DocumentPrintable implements Printable, PrintDocumentRepository {
         }
     }
 
-
-
-    public void loadDocxFile(File file) {
-        try (FileInputStream fis = new FileInputStream(file)) {
-            XWPFDocument document = new XWPFDocument(fis);
-            StringBuilder htmlContent = new StringBuilder();
-
-            // Проход по каждому элементу документа
-            for (IBodyElement element : document.getBodyElements()) {
-                if (element instanceof XWPFParagraph paragraph) {
-                    htmlContent.append("<p>").append(paragraph.getText()).append("</p>");
-                } else if (element instanceof XWPFTable table) {
-                    htmlContent.append("<table border='1'>");
-                    for (XWPFTableRow row : table.getRows()) {
-                        htmlContent.append("<tr>");
-                        for (XWPFTableCell cell : row.getTableCells()) {
-                            htmlContent.append("<td>").append(cell.getText()).append("</td>");
-                        }
-                        htmlContent.append("</tr>");
-                    }
-                    htmlContent.append("</table>");
-                }
-            }
-
-//            editorPane.setText(htmlContent.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

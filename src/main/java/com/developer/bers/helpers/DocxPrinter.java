@@ -2,6 +2,7 @@ package com.developer.bers.helpers;
 
 import com.developer.bers.domain.models.CustomField;
 import com.developer.bers.domain.repositories.PrintDocumentRepository;
+import com.developer.bers.presentation.surfaces.CustomRow;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
@@ -92,7 +93,7 @@ public class DocxPrinter extends JFrame implements ActionListener, Printable, Pr
 //    }
 
     @Override
-    public void printDoc(List<CustomField> listOfCustomField, XWPFDocument document, String s){
+    public void printDoc(List<CustomRow> listOfCustomField, XWPFDocument document, String s){
         DocxPrinter printer = new DocxPrinter();
         String path = System.getProperty("user.dir");
         File file = new File(path + "/files/output/Document.docx");  // Укажите путь к вашему .docx файлу

@@ -43,14 +43,18 @@ public class MainPanel extends JPanel {
 
     private void addComponentsToPanel(ListParagraphBuilder listParagraphBuilder) {
         List <String> listOfParagraphs = listParagraphBuilder.getList();
-        List <CustomField> listOfCustomFields = new ArrayList<>();
+        List <CustomRow> listOfCustomRows = new ArrayList<>();
+
 
         for (int i = 0; i < listOfParagraphs.size(); i++) {
             if (!listOfParagraphs.get(i).isEmpty()) {  // check if string no text we don't use it
                 String textOfParagraph = listOfParagraphs.get(i);
-                listOfCustomFields.add(createComponent(0, i, 2, textOfParagraph, 50));
+                listOfCustomRows.add(createComponent(0, i, 2, textOfParagraph, 50));
             }
         }
+
+
+
 
         gbc.gridx = 0;
         gbc.gridy = listOfParagraphs.size() + 1;
@@ -68,7 +72,7 @@ public class MainPanel extends JPanel {
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-//                new CreateNewDocumentUseCase().execute(listOfCustomFields);
+//                new CreateNewDocumentUseCase().execute(listOfCustomRows);
             }
         });
         mainPanel.add(button1, gbc);
@@ -94,7 +98,7 @@ public class MainPanel extends JPanel {
 
 
                 new PrintDocumentUseCase().execute(
-                        listOfCustomFields,
+                        listOfCustomRows,
                         document,
                         path
                 );
@@ -103,18 +107,19 @@ public class MainPanel extends JPanel {
         mainPanel.add(printButton, gbc);
     }
 
-    private CustomField createComponent(int numRow, int numColumn, int gridWidth, String textOfLabel, int quantityColumnsForTextField) {
+    private CustomRow createComponent(int numRow, int numColumn, int gridWidth, String textOfLabel, int quantityColumnsForTextField) {
         gbc.gridx = numRow;
         gbc.gridy = numColumn;
         gbc.gridwidth = gridWidth;
 
         CustomLabel textLabel = new CustomLabel(textOfLabel);
         CustomField customField = new CustomField(quantityColumnsForTextField);
+        CustomRow customRow = new CustomRow(textLabel, customField);
 
         listOfTextField.put(textLabel, customField);
         mainPanel.add(new RowOfTextAndField(textLabel, customField), gbc);
 
-        return customField;
+        return customRow;
     }
 
 }
