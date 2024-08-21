@@ -4,9 +4,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class CustomLabel extends JLabel {
+public class Tab extends JLabel {
 
-    public CustomLabel(String text) {
+    public Tab(String text) {
         super(text);  // Устанавливаем текст для текущего объекта JLabel
         setFont(new Font("Arial", Font.BOLD, 14)); // Устанавливаем шрифт
 

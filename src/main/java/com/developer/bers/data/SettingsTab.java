@@ -1,6 +1,6 @@
 package com.developer.bers.data;
 
-import com.developer.bers.domain.models.CustomLabel;
+import com.developer.bers.domain.models.Tab;
 import com.developer.bers.domain.models.CustomField;
 import com.developer.bers.domain.usecases.ManagerTabComponentsUseCase;
 import com.developer.bers.presentation.surfaces.RowOfTextAndField;
@@ -80,9 +80,9 @@ public class SettingsTab extends JPanel {
         gbc.gridy = numRow;
         gbc.gridx = numColumn;
         gbc.gridwidth = gridWidth;
-        CustomLabel customLabel = new CustomLabel(textOfLabel);
+        Tab tab = new Tab(textOfLabel);
         JTextField customField = new CustomField(quantityColumnsForTextField);
-        thisPanel.add(new RowOfTextAndField(customLabel, customField), gbc);
+        thisPanel.add(new RowOfTextAndField(tab, customField), gbc);
     }
 
     private void createPanel() {

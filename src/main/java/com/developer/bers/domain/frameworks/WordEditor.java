@@ -9,7 +9,7 @@ import java.util.List;
 import com.developer.bers.domain.models.FileName;
 import com.developer.bers.domain.models.FilePaths;
 import com.developer.bers.domain.models.ListOfFileNames;
-import com.developer.bers.domain.models.CustomLabel;
+import com.developer.bers.domain.models.Tab;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -25,7 +25,7 @@ public class WordEditor {
 
     private final ListOfFileNames <FileName> listOfFileNames;
 
-    public WordEditor(CustomLabel nameCustomLabel) {
+    public WordEditor(Tab nameCustomLabel) {
 
         listOfFileNames = new ListOfFileNames<>();
 //        String searchText = String.valueOf(list.get(0));

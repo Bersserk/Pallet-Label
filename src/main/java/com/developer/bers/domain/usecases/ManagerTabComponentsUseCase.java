@@ -4,11 +4,11 @@ import com.developer.bers.data.DocxFileFinder;
 import com.developer.bers.data.SettingsTab;
 import com.developer.bers.data.repositories.AddableTemplate;
 import com.developer.bers.data.repositories.RemovableTemplate;
-import com.developer.bers.domain.models.CustomLabel;
+import com.developer.bers.domain.models.Tab;
 import com.developer.bers.domain.repositories.GetListNamesFilesFromFolder;
 import com.developer.bers.domain.repositories.PressButtonAddTemplate;
 import com.developer.bers.domain.repositories.PressButtonRemoveTemplate;
-import com.developer.bers.presentation.surfaces.MainPanel;
+import com.developer.bers.presentation.surfaces.DataForTab;
 
 import javax.swing.*;
 import java.util.List;
@@ -56,7 +56,7 @@ public class ManagerTabComponentsUseCase {
             tabPane.removeAll();
             listNamesOfDirectory.getList().forEach(item ->
                     {
-                        tabPane.addTab(item, new MainPanel(new CustomLabel(item)));
+                        tabPane.addTab(item, new DataForTab(new Tab(item)));
                     }
             );
             tabPane.addTab("Settings", new SettingsTab(tabPane));

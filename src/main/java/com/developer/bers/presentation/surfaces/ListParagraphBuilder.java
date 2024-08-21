@@ -1,11 +1,10 @@
 package com.developer.bers.presentation.surfaces;
 
-import com.developer.bers.domain.models.CustomLabel;
+import com.developer.bers.domain.models.Tab;
 import com.developer.bers.domain.models.FilePaths;
 import org.apache.poi.xwpf.usermodel.*;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public class ListParagraphBuilder {
 
 
 
-    public ListParagraphBuilder(CustomLabel nameCustomLabel) {
+    public ListParagraphBuilder(Tab nameCustomLabel) {
         try (FileInputStream fis = new FileInputStream(filePaths.inputFilePath() + nameCustomLabel.getText());
              XWPFDocument doc = new XWPFDocument(fis)) {
             document = doc;
