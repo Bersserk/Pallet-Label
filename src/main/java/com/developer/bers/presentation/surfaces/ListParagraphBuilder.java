@@ -87,7 +87,7 @@ public class ListParagraphBuilder {
 //        String inputString = text;
 
         // Split the input string by two or more spaces
-        String[] words = inputString.split("  "); // Note the double space here
+        String[] words = inputString.split(" {2}"); // Note the double space here
 
         // Create a new ArrayList to store the words
         List<String> result = new ArrayList<>();

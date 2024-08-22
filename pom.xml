@@ -37,8 +37,13 @@
         </dependency>
         <dependency>
             <groupId>org.docx4j</groupId>
-            <artifactId>docx4j</artifactId>
-            <version>11.4.8</version>
+            <artifactId>docx4j-JAXB-ReferenceImpl</artifactId>
+            <version>11.4.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.docx4j</groupId>
+            <artifactId>docx4j-export-fo</artifactId>
+            <version>11.4.6</version>
         </dependency>
 
     </dependencies>

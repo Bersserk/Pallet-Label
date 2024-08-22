@@ -15,7 +15,7 @@ public class MainView extends BaseJFrame {
 
         JTabbedPane tabPane = new JTabbedPane();
 
-        new DocxFileFinder(AppProperties.get("inputFolder")).getList().forEach(nameOfFile ->
+        new DocxFileFinder(AppProperties.get("input_folder")).getList().forEach(nameOfFile ->
                 {
                     tabPane.addTab(nameOfFile, new DataForTab(new Tab(nameOfFile)));
                 }

@@ -1,5 +1,6 @@
 package com.developer.bers.domain.frameworks;
 
+import com.developer.bers.domain.repositories.AppConst;
 import com.developer.bers.domain.repositories.SaveNewDocumentRepository;
 import com.developer.bers.helpers.CurrentWorkingDirectory;
 import com.developer.bers.presentation.AppProperties;
@@ -21,7 +22,7 @@ public class DocumentSaveable implements SaveNewDocumentRepository {
 
         // Сохранение DOCX документа
 
-        try (FileOutputStream out = new FileOutputStream(AppProperties.get("outputFolder") + "\\" + listRows.getName())) {
+        try (FileOutputStream out = new FileOutputStream(AppProperties.get(AppConst.OUTPUT_FOLDER) + "\\" + listRows.getName())) {
             someDoc.write(out);
             System.out.println("Document created successfully!");
         } catch (IOException e) {
@@ -31,7 +32,7 @@ public class DocumentSaveable implements SaveNewDocumentRepository {
 
     private XWPFDocument getDoc(ListRows<CustomRow> listRows) {
         XWPFDocument doc = null;
-        String dir = AppProperties.get("inputFolder") + listRows.getName();
+        String dir = AppProperties.get(AppConst.INPUT_FOLDER) + listRows.getName();
 
         try (FileInputStream fis = new FileInputStream(dir)) {
             doc = new XWPFDocument(fis);
@@ -43,6 +44,7 @@ public class DocumentSaveable implements SaveNewDocumentRepository {
                     String text = run.getText(0);
 
                     listRows.getList().forEach(it -> {
+                        boolean two = text.contains(it.textLabel().getText());
                         if (text != null && text.contains(it.textLabel().getText())) {
                             String updatedRunText = text.replace(text, it.customField().getText());
                             run.setText(updatedRunText, 0);

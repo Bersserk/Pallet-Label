@@ -11,6 +11,7 @@ import com.developer.bers.domain.repositories.PressButtonRemoveTemplate;
 import com.developer.bers.presentation.surfaces.DataForTab;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
 public class ManagerTabComponentsUseCase {

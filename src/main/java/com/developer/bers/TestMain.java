@@ -1,13 +1,18 @@
 package com.developer.bers;
 
+import com.developer.bers.domain.frameworks.StringFormatter;
 import com.developer.bers.domain.frameworks.WordEditor;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestMain {
-    public TestMain() {
-        main();
+
+    public static void main(String[] args) {
+//        String text = "hello wOrd SoMe guys!!&";
+//        String newText;
+//        newText = new StringFormatter(text).getModifiedText();
     }
 
     public List getList() {

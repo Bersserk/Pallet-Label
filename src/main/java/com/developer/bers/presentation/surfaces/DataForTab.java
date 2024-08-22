@@ -2,6 +2,7 @@ package com.developer.bers.presentation.surfaces;
 
 import com.developer.bers.domain.models.CustomField;
 import com.developer.bers.domain.models.Tab;
+import com.developer.bers.domain.repositories.AppConst;
 import com.developer.bers.domain.usecases.MakeNewDocumentUseCase;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
@@ -37,7 +38,8 @@ public class DataForTab extends JPanel {
         for (int i = 0; i < listOfParagraphs.size(); i++) {
             if (!listOfParagraphs.get(i).isEmpty()) {  // check if string no text we don't use it
                 String textOfParagraph = listOfParagraphs.get(i);
-                listOfCustomRows.getList().add(createComponent(0, i, 2, textOfParagraph, 50));
+                int num = super.getWidth();
+                listOfCustomRows.getList().add(createComponent(0, i, 2, textOfParagraph, 25));
             }
         }
 
@@ -57,7 +59,7 @@ public class DataForTab extends JPanel {
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-//                new CreateNewDocumentUseCase().execute(listOfCustomRows);
+                //  TODO
             }
         });
 
@@ -79,13 +81,20 @@ public class DataForTab extends JPanel {
         mainPanel.add(printButton, gbc);
     }
 
-    private CustomRow createComponent(int numRow, int numColumn, int gridWidth, String textOfLabel, int quantityColumnsForTextField) {
+    private CustomRow createComponent(
+            int numRow,
+            int numColumn,
+            int gridWidth,
+            String textOfLabel,
+            int quantityColumnsForTextField) {
+
         gbc.gridx = numRow;
         gbc.gridy = numColumn;
         gbc.gridwidth = gridWidth;
 
         Tab textLabel = new Tab(textOfLabel);
-        CustomField customField = new CustomField(quantityColumnsForTextField);
+        CustomField customField = new CustomField(quantityColumnsForTextField, AppConst.NON_FILTER);
+
         CustomRow customRow = new CustomRow(textLabel, customField);
 
         mainPanel.add(new RowOfTextAndField(textLabel, customField), gbc);

@@ -1,8 +1,11 @@
 package com.developer.bers.data;
 
-import com.developer.bers.domain.models.Tab;
+import com.developer.bers.domain.frameworks.StringFormatter;
 import com.developer.bers.domain.models.CustomField;
+import com.developer.bers.domain.models.Tab;
+import com.developer.bers.domain.repositories.AppConst;
 import com.developer.bers.domain.usecases.ManagerTabComponentsUseCase;
+import com.developer.bers.presentation.AppProperties;
 import com.developer.bers.presentation.surfaces.RowOfTextAndField;
 
 import javax.swing.*;
@@ -11,13 +14,15 @@ import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class SettingsTab extends JPanel {
     // Файл для хранения настроек
-    private static final String SETTINGS_FILE = "settings.properties";
+    private static final String SETTINGS_FILE = AppProperties.get("properties");
     // Директория, куда будут сохраняться выбранные файлы
-    private static final String TARGET_DIRECTORY = System.getProperty("user.dir") + "/files/input/";
+//    private static final String TARGET_DIRECTORY = System.getProperty("user.dir") + "/files/input/";
 
     private final Properties settings;
     private final JTabbedPane tabPane;
@@ -26,23 +31,25 @@ public class SettingsTab extends JPanel {
 
     private ManagerTabComponentsUseCase manager = new ManagerTabComponentsUseCase();
 
-//    private AddingTemplate addingTemplate;
+    private final Map<String, JTextField> fieldMap = new HashMap<>();
 
 
     public SettingsTab(JTabbedPane tabPane) {
         this.tabPane = tabPane;
         createPanel();
         settings = new Properties();
-//        addingTemplate = new AddingTemplate();
         loadSettings();
         addComponentsToPanel();
     }
 
     private void addComponentsToPanel() {
 
-        addCustomRowOfTextAndField(0, 0, 1, "first", 15);
-        addCustomRowOfTextAndField(1, 0, 1, "fffff", 15);
-        addCustomRowOfTextAndField(2, 0, 1, "second", 15);
+        addCustomRowOfTextAndField(0, 0, 1,
+                "Width main screen", 1000, 5, AppConst.ONLY_NUMBERS);
+        addCustomRowOfTextAndField(1, 0, 1,
+                "Length main screen", 800, 5, AppConst.ONLY_NUMBERS);
+        addCustomRowOfTextAndField(2, 0, 1,
+                "Font size", 20, 5, AppConst.ONLY_NUMBERS);
 //        createComponent(2, 1, 2, list.get(2), 15);
 //        createComponent(4, 1, 2, list.get(3), 15);
 //        createComponent(0, 2, MAIN_PANEL, list.get(4), 50);
@@ -56,11 +63,11 @@ public class SettingsTab extends JPanel {
 //        gbc.insets = new Insets(0,15,0,15);
 
 
+        addCustomButton(3, 0, 2, "Save Settings", a -> saveSettings());
 
-        addCustomButton(3, 0, 2, "Add Template", a -> manager.addTemplate(tabPane));
+        addCustomButton(4, 0, 2, "Add Template", a -> manager.addTemplate(tabPane));
 
-        addCustomButton(4, 0, 2, "Remove Template", a -> manager.removeTemplate(tabPane));
-
+        addCustomButton(5, 0, 2, "Remove Template", a -> manager.removeTemplate(tabPane));
 
 
     }
@@ -70,18 +77,32 @@ public class SettingsTab extends JPanel {
         gbc.gridy = numRow;
         gbc.gridx = numColumn;
         gbc.gridwidth = gridWidth;
-        gbc.insets = new Insets(10,0,0,10);
+        gbc.insets = new Insets(10, 0, 0, 10);
         JButton button = new JButton(textOfButton);
         button.addActionListener(action);
         thisPanel.add(button, gbc);
     }
 
-    private void addCustomRowOfTextAndField(int numRow, int numColumn, int gridWidth, String textOfLabel, int quantityColumnsForTextField) {
+    private void addCustomRowOfTextAndField(
+            int numRow,
+            int numColumn,
+            int gridWidth,
+            String textOfLabel,
+            int defaultValue,
+            int quantityColumnsForTextField,
+            int filter) {
+
+        String formattedTextOfLabel = new StringFormatter().formatedForKey(textOfLabel);
+
         gbc.gridy = numRow;
         gbc.gridx = numColumn;
         gbc.gridwidth = gridWidth;
         Tab tab = new Tab(textOfLabel);
-        JTextField customField = new CustomField(quantityColumnsForTextField);
+        JTextField customField = new CustomField(quantityColumnsForTextField, filter);
+
+        customField.setText(String.valueOf(AppProperties.getNum(formattedTextOfLabel, defaultValue)));
+
+        fieldMap.put(new StringFormatter().formatedForKey(formattedTextOfLabel), customField);
         thisPanel.add(new RowOfTextAndField(tab, customField), gbc);
     }
 
@@ -95,6 +116,12 @@ public class SettingsTab extends JPanel {
     }
 
     private void saveSettings() {
+        System.out.println("method saveSetting from SettingsTab ");
+        // Обновление значений в settings перед сохранением в файл
+        for (Map.Entry<String, JTextField> entry : fieldMap.entrySet()) {
+            settings.setProperty(entry.getKey(), entry.getValue().getText());
+        }
+
         try (FileOutputStream out = new FileOutputStream(SETTINGS_FILE)) {
             settings.store(out, "Application Settings");
         } catch (IOException e) {

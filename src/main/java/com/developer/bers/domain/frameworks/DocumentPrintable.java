@@ -1,5 +1,6 @@
 package com.developer.bers.domain.frameworks;
 
+import com.developer.bers.domain.repositories.AppConst;
 import com.developer.bers.domain.repositories.PrintNewDocumentRepository;
 import com.developer.bers.presentation.AppProperties;
 
@@ -27,7 +28,7 @@ public class DocumentPrintable implements Printable, PrintNewDocumentRepository 
 
     @Override
     public void printDoc(String nameOfFile) {
-        if (new File(AppProperties.get("outputFolder") + nameOfFile).exists()) {
+        if (new File(AppProperties.get(AppConst.OUTPUT_FOLDER) + nameOfFile).exists()) {
             PrinterJob job = PrinterJob.getPrinterJob();
             job.setPrintable(this);
 
