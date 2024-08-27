@@ -39,7 +39,7 @@ public class DataForTab extends JPanel {
             if (!listOfParagraphs.get(i).isEmpty()) {  // check if string no text we don't use it
                 String textOfParagraph = listOfParagraphs.get(i);
                 int num = super.getWidth();
-                listOfCustomRows.getList().add(createComponent(0, i, 2, textOfParagraph, 25));
+                listOfCustomRows.getListOfCustomRows().add(createComponent(0, i, 2, textOfParagraph, 25));
             }
         }
 

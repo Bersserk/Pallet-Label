@@ -22,9 +22,6 @@ public class ListParagraphBuilder {
         return document;
     }
 
-    public FilePaths getFilePaths() {
-        return filePaths;
-    }
     public List<String> getList() {
 
         return listParagraphs;

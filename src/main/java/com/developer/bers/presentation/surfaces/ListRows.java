@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ListRows <CustomRow> {
     private String nameList;
-    private List<CustomRow> listOfCustomRows;
+    private final List<CustomRow> listOfCustomRows;
 
 
 
@@ -18,7 +18,7 @@ public class ListRows <CustomRow> {
         return nameList;
     }
 
-    public List<CustomRow> getList() {
+    public List<CustomRow> getListOfCustomRows() {
         return listOfCustomRows;
     }
 
