@@ -1,5 +1,7 @@
 package com.developer.bers.domain.repositories;
 
+import java.io.File;
+
 public interface PrintNewDocumentRepository {
-    void printDoc (String nameOfFile);
+    void printDoc (File nameOfFile);
 }

@@ -1,7 +1,5 @@
 package com.developer.bers.data;
 
-import com.developer.bers.helpers.CurrentWorkingDirectory;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -63,7 +61,7 @@ public class SettingsApp {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileFilter(new FileNameExtensionFilter("Word Documents", "docx"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter("Word Documents", "docs"));
                 int returnValue = fileChooser.showOpenDialog(settingsDialog);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();

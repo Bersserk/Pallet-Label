@@ -1,15 +1,16 @@
 package com.developer.bers.domain.frameworks;
 
-import com.developer.bers.presentation.surfaces.CustomRow;
+import com.developer.bers.data.RowComponent;
 import org.apache.poi.xwpf.usermodel.*;
 
 import java.util.List;
+import java.util.Map;
 
 public class FillerDocument {
     private final XWPFDocument document;
-    private final List<CustomRow> listRows;
+    private final Map<String, String> listRows;
 
-    public FillerDocument(XWPFDocument document, List<CustomRow> listRows) {
+    public FillerDocument(XWPFDocument document, Map<String, String> listRows) {
         this.document = document;
         this.listRows = listRows;
     }
@@ -19,7 +20,7 @@ public class FillerDocument {
         return runByList(document, listRows);
     }
 
-    private XWPFDocument runByList(XWPFDocument document, List<CustomRow> listRows) {
+    private XWPFDocument runByList(XWPFDocument document, Map<String, String> listRows) {
 
         List<XWPFParagraph> paragraphs = document.getParagraphs();
 
@@ -67,16 +68,18 @@ public class FillerDocument {
         return document;
     }
 
-    private String listRowsContain(String textRun, List<CustomRow> listRows) {
+    private String listRowsContain(String textRun, Map<String, String> listRows) {
 
         String textReturn = null;
-        for (CustomRow it : listRows) {
-            String textLabel = it.getTextLabel().getText();
-            if (textRun.contains(textLabel)) {
-                textReturn = it.getCustomField().getText();
+
+        // Обход всех ключей в HashMap
+        for (String key : listRows.keySet()) {
+            if (textRun.contains(key)&& !key.isEmpty()) {
+                textReturn = listRows.get(key);
                 break;
             }
         }
+
         return textReturn;
     }
 }

@@ -22,7 +22,7 @@ public class RemovableTemplate implements PressButtonRemoveTemplate {
 
         // File chooser button
         JFileChooser fileChooser = new JFileChooser(TARGET_DIRECTORY);
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Word Documents", "docx"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Word Documents", "docs"));
         int returnValue = fileChooser.showOpenDialog(settingsDialog);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();

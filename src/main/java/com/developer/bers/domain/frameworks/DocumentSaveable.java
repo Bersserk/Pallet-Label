@@ -3,8 +3,9 @@ package com.developer.bers.domain.frameworks;
 import com.developer.bers.domain.repositories.AppConst;
 import com.developer.bers.domain.repositories.SaveNewDocumentRepository;
 import com.developer.bers.presentation.AppProperties;
-import com.developer.bers.presentation.surfaces.CustomRow;
-import com.developer.bers.presentation.surfaces.ListRows;
+import com.developer.bers.data.RowComponent;
+import com.developer.bers.presentation.surfaces.ListRowsBuilder;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.xwpf.usermodel.*;
 
 import java.io.FileInputStream;
@@ -12,29 +13,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-public class DocumentSaveable implements SaveNewDocumentRepository {
+public class DocumentSaveable {
 
-    @Override
-    public void saveDoc(ListRows<CustomRow> listRows) {
+    public void saveDoc(XWPFDocument document, String fileName) {
 
-        XWPFDocument someDoc = getDoc(listRows);
+//        XWPFDocument someDoc = getDoc(listRows);
+
 
         // Сохранение DOCX документа
 
-        try (FileOutputStream out = new FileOutputStream(AppProperties.get(AppConst.OUTPUT_FOLDER) + "\\" + listRows.getName())) {
-            someDoc.write(out);
+        try (FileOutputStream out = new FileOutputStream(AppProperties.get(AppConst.OUTPUT_FOLDER) + "\\" + fileName)) {
+            document.write(out);
             System.out.println("Document created successfully!");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private XWPFDocument getDoc(ListRows<CustomRow> listRows) {
+    private XWPFDocument getDoc(ListRowsBuilder<RowComponent> listRows) {
         XWPFDocument doc = null;
         String dir = AppProperties.get(AppConst.INPUT_FOLDER) + listRows.getName();
 
         try (FileInputStream fis = new FileInputStream(dir)) {
-            doc = new FillerDocument(new XWPFDocument(fis), listRows.getListOfCustomRows()).getFilledDoc();
+//            doc = new FillerDocument(new XWPFDocument(fis), listRows.getListOfCustomRows()).getFilledDoc();
 
             // Обработка таблиц
             for (XWPFTable table : doc.getTables()) {
@@ -46,8 +47,8 @@ public class DocumentSaveable implements SaveNewDocumentRepository {
                                 String text = run.getText(0);
 
                                 listRows.getListOfCustomRows().forEach(it -> {
-                                    if (text != null && text.contains(it.getTextLabel().getText())) {
-                                        String updatedRunText = text.replace(text, it.getCustomField().getText());
+                                    if (text != null && text.contains(it.getLabel())) {
+                                        String updatedRunText = text.replace(text, it.getField());
                                         run.setText(updatedRunText, 0);
                                     }
                                 });
@@ -65,12 +66,12 @@ public class DocumentSaveable implements SaveNewDocumentRepository {
         return doc;
     }
 
-    private String getTextFromTextField (String inText, List<CustomRow> listRows){
+    private String getTextFromTextField (String inText, List<RowComponent> listRows){
         String str = null;
 
         for (int i = 0; i < listRows.size(); i++){
-            if (listRows.get(i).getTextLabel().equals(inText)){
-                str = listRows.get(i).getCustomField().getText();
+            if (listRows.get(i).getLabel().equals(inText)){
+                str = listRows.get(i).getField();
                 break;
             }
         }
@@ -78,7 +79,7 @@ public class DocumentSaveable implements SaveNewDocumentRepository {
         return str;
     }
 
-    public void replaceTextInParagraphs(List<XWPFParagraph> paragraphs, List<CustomRow> listRows) {
+    public void replaceTextInParagraphs(List<XWPFParagraph> paragraphs, List<RowComponent> listRows) {
         for (XWPFParagraph paragraph : paragraphs) {
             String paragraphText = paragraph.getText();
 

@@ -1,21 +1,22 @@
 package com.developer.bers.presentation.surfaces;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListRows <CustomRow> {
+public class ListRowsBuilder<CustomRow> {
     private String nameList;
     private final List<CustomRow> listOfCustomRows;
 
 
 
-    public ListRows() {
+    public ListRowsBuilder() {
         this.listOfCustomRows = new ArrayList<>();
     }
 
 
-    public String getName() {
-        return nameList;
+    public File getName() {
+        return new File(nameList);
     }
 
     public List<CustomRow> getListOfCustomRows() {

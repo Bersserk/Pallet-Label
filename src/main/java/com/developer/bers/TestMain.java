@@ -1,43 +1,55 @@
 package com.developer.bers;
 
-import com.developer.bers.domain.frameworks.StringFormatter;
-import com.developer.bers.domain.frameworks.WordEditor;
-
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.*;
 
 public class TestMain {
 
     public static void main(String[] args) {
-//        String text = "hello wOrd SoMe guys!!&";
-//        String newText;
-//        newText = new StringFormatter(text).getModifiedText();
+        JFrame frame = new JFrame("Dropdown Example");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 200);
+
+        DropDownField2 dropDownField = new DropDownField2();
+        frame.add(dropDownField);
+
+        frame.setVisible(true);
     }
+}
 
-    public List getList() {
-        return list;
-    }
+class DropDownField2 extends JPanel {
 
-    public List list = new ArrayList<>();
+    private JComboBox<String> comboBox;
+    private JLabel label;
 
-    public void main() {
-        list.add("nameOfGood");
-        list.add("date");
-        list.add("time");
-        list.add("to");
-        list.add("code");
-        list.add("consumer");
-        list.add("dateToday");
-        list.add("quality");
-        list.add("count");
-        list.add("lot");
+    public DropDownField2() {
+        setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
-    }
+        // Create a JComboBox with some options
+        String[] options = {"Option 1", "Option 2", "Option 3", "Option 4"};
+        comboBox = new JComboBox<>(options);
 
-    private static void run() {
-//        WordEditor wordEditor = new WordEditor(nameFile);
+        // Optionally, make the JComboBox editable
+        comboBox.setEditable(true);
 
+        // Add the JComboBox to the JPanel
+        add(comboBox);
+
+//        // Add a button to show the selected item
+//        JButton button = new JButton("Show Selected Item");
+//        add(button);
+//
+//        // Add a label to display the selected item
+//        label = new JLabel("Selected Item: ");
+//        add(label);
+//
+//        // ActionListener to show the selected item
+//        button.addActionListener(e -> {
+//            String selectedItem = (String) comboBox.getSelectedItem();
+//            label.setText("Selected Item: " + selectedItem);
+//        });
     }
 
 }
+
+

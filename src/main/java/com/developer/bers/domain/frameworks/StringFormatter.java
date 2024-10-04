@@ -2,29 +2,34 @@ package com.developer.bers.domain.frameworks;
 
 public class StringFormatter {
 
+    // format to text_text_text
     public String formatedForKey(String text) {
         if (text == null || text.isEmpty()) {
             return text;
         } else {
-
             StringBuilder formattedText = new StringBuilder();
 
             for (char currentChar : text.toCharArray()) {
-                if (Character.isLetter(currentChar) || currentChar == ' ' || currentChar == '_' ) {
-                    if (currentChar == ' ') {
+                // Проверяем, является ли символ заглавной буквой
+                if (Character.isUpperCase(currentChar)) {
+                    // Если заглавная, добавляем '_' перед буквой и делаем ее строчной
+                    if (formattedText.length() > 0) {  // избегаем подчеркивания в начале строки
                         formattedText.append('_');
-                    } else if (currentChar == '_'){
-                        formattedText.append(currentChar);
                     }
-                    else {
-                        formattedText.append(Character.toLowerCase(currentChar));
-                    }
+                    formattedText.append(Character.toLowerCase(currentChar));
+                } else if (currentChar == ' ') {
+                    // Преобразуем пробелы в подчеркивания
+                    formattedText.append('_');
+                } else {
+                    // Просто добавляем строчные буквы и символы '_'
+                    formattedText.append(currentChar);
                 }
             }
 
             return formattedText.toString();
         }
     }
+
 
 
     public String formatedForText(String text) {

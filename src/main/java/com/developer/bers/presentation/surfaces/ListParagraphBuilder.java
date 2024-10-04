@@ -1,6 +1,6 @@
 package com.developer.bers.presentation.surfaces;
 
-import com.developer.bers.domain.models.Tab;
+import com.developer.bers.data.models.Paragraph;
 import com.developer.bers.domain.models.FilePaths;
 import org.apache.poi.xwpf.usermodel.*;
 
@@ -11,26 +11,31 @@ import java.util.List;
 
 public class ListParagraphBuilder {
 
+    private final String nameCustomLabel;
     private FilePaths filePaths = new FilePaths(
             "files/input/",
             "files/output/Document.docx");
 
     private XWPFDocument document;
-    private List<String> listParagraphs;
+    private List<Paragraph> listParagraphs;
+
+
 
     public XWPFDocument getDocument() {
         return document;
     }
-
-    public List<String> getList() {
+    public List<Paragraph> getList() {
 
         return listParagraphs;
     }
 
 
 
-    public ListParagraphBuilder(Tab nameCustomLabel) {
-        try (FileInputStream fis = new FileInputStream(filePaths.inputFilePath() + nameCustomLabel.getText());
+
+
+    public ListParagraphBuilder(String nameCustomLabel) {
+        this.nameCustomLabel = nameCustomLabel;
+        try (FileInputStream fis = new FileInputStream(filePaths.inputFilePath() + nameCustomLabel);
              XWPFDocument doc = new XWPFDocument(fis)) {
             document = doc;
 
@@ -45,9 +50,9 @@ public class ListParagraphBuilder {
             for (XWPFParagraph paragraph : document.getParagraphs()) {
                 String text = paragraph.getText();
                 if (text.contains("  ")) {
-                    listParagraphs.addAll(splitTextByItems(text));
+                    listParagraphs.addAll(splitTextByItems(paragraph));
                 } else {
-                    listParagraphs.add(paragraph.getText());
+                    listParagraphs.add(new Paragraph(paragraph, nameCustomLabel));
                 }
             }
 
@@ -57,9 +62,9 @@ public class ListParagraphBuilder {
                         for (XWPFParagraph paragraph : cell.getParagraphs()) {
                             String text = paragraph.getText();
                             if (text.contains("  ")) {
-                                listParagraphs.addAll(splitTextByItems(text));
+                                listParagraphs.addAll(splitTextByItems(paragraph));
                             } else {
-                                listParagraphs.add(paragraph.getText());
+                                listParagraphs.add(new Paragraph(paragraph, nameCustomLabel));
                             }
                         }
                     }
@@ -80,22 +85,32 @@ public class ListParagraphBuilder {
         }
     }
 
-    private List splitTextByItems(String inputString) {
-//        String inputString = text;
+    private List<Paragraph> splitTextByItems(XWPFParagraph inputParagraph) {
+        // Получаем текст из входного параграфа
+        String inputText = inputParagraph.getText();
 
-        // Split the input string by two or more spaces
-        String[] words = inputString.split(" {2}"); // Note the double space here
+        // Разделяем текст по двум и более пробелам
+        String[] words = inputText.split("\\s{2,}"); // \\s{2,} - разделение по 2 и более пробелам
 
-        // Create a new ArrayList to store the words
-        List<String> result = new ArrayList<>();
+        // Создаем новый XWPFDocument для хранения параграфов
+        XWPFDocument document = new XWPFDocument();
 
-        // Add each word to the result list
+        // Создаем список для хранения разделенных параграфов
+        List<Paragraph> result = new ArrayList<>();
+
+        // Проходим по каждому разделенному фрагменту текста
         for (String word : words) {
-            if (!word.trim().isEmpty()) { // Ignore empty strings (due to consecutive spaces)
-                result.add(word.trim());
+            if (!word.trim().isEmpty()) { // Пропускаем пустые строки
+                // Создаем новый параграф в документе
+                XWPFParagraph paragraph = document.createParagraph();
+                paragraph.createRun().setText(word.trim());
+
+                // Добавляем параграф в список
+                result.add(new Paragraph(paragraph, nameCustomLabel));
             }
         }
 
         return result;
     }
+
 }

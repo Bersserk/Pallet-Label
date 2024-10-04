@@ -27,8 +27,9 @@ public class DocumentPrintable implements Printable, PrintNewDocumentRepository 
     }
 
     @Override
-    public void printDoc(String nameOfFile) {
-        if (new File(AppProperties.get(AppConst.OUTPUT_FOLDER) + nameOfFile).exists()) {
+    public void printDoc(File inputedFile) {
+        if (inputedFile.exists()) {
+
             PrinterJob job = PrinterJob.getPrinterJob();
             job.setPrintable(this);
 

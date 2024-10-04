@@ -1,74 +1,90 @@
 package com.developer.bers.data;
 
+import com.developer.bers.data.store.LocalManagerBy;
 import com.developer.bers.domain.frameworks.StringFormatter;
-import com.developer.bers.domain.models.CustomField;
-import com.developer.bers.domain.models.Tab;
-import com.developer.bers.domain.repositories.AppConst;
-import com.developer.bers.domain.usecases.ManagerTabComponentsUseCase;
 import com.developer.bers.presentation.AppProperties;
-import com.developer.bers.presentation.surfaces.RowOfTextAndField;
+import com.developer.bers.presentation.MainView;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 public class SettingsTab extends JPanel {
     // Файл для хранения настроек
     private static final String SETTINGS_FILE = AppProperties.get("properties");
+    public static final String SAVE_SETTINGS = "save_settings";
+    public static final String LANGUAGE = "language";
+    public static final String WIDTH_MAIN_SCREEN = "width_main_screen";
+    public static final String LENGTH_MAIN_SCREEN = "length_main_screen";
+    public static final String FONT_SIZE = "font_size";
     // Директория, куда будут сохраняться выбранные файлы
-//    private static final String TARGET_DIRECTORY = System.getProperty("user.dir") + "/files/input/";
 
-    private final Properties settings;
-    private final JTabbedPane tabPane;
+    private final LocalManagerBy localManager;
+    private final MainView mainView;
+    public RowComponent widthOfScreen;
+    public RowComponent fontSize;
+    public RowComponent dropDownLanguage;
     private JPanel thisPanel;
     private GridBagConstraints gbc;
 
-    private ManagerTabComponentsUseCase manager = new ManagerTabComponentsUseCase();
+    private final Map<String, JComponent> fieldMap = new HashMap<>();
 
-    private final Map<String, JTextField> fieldMap = new HashMap<>();
+    public RowComponent lengthOfScreen;
 
 
-    public SettingsTab(JTabbedPane tabPane) {
-        this.tabPane = tabPane;
+    public SettingsTab(LocalManagerBy localManager, MainView mainView) {
+        this.localManager = localManager;
+        this.mainView = mainView;
         createPanel();
-        settings = new Properties();
         loadSettings();
         addComponentsToPanel();
     }
 
     private void addComponentsToPanel() {
-
-        addCustomRowOfTextAndField(0, 0, 1,
-                "Width main screen", 1000, 5, AppConst.ONLY_NUMBERS);
-        addCustomRowOfTextAndField(1, 0, 1,
-                "Length main screen", 800, 5, AppConst.ONLY_NUMBERS);
-        addCustomRowOfTextAndField(2, 0, 1,
-                "Font size", 20, 5, AppConst.ONLY_NUMBERS);
-//        createComponent(2, 1, 2, list.get(2), 15);
-//        createComponent(4, 1, 2, list.get(3), 15);
-//        createComponent(0, 2, MAIN_PANEL, list.get(4), 50);
-//        createComponent(0, 3, 2, list.get(5), 12);
-//        createComponent(2, 3, 2, list.get(6), 12);
-//        createComponent(0, 4, 2, list.get(7), 12);
-//        createComponent(2, 4, 2, list.get(8), 12);
-//        createComponent(0, 5, MAIN_PANEL, list.get(9), 50);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridwidth = 2;
 
 
-//        gbc.insets = new Insets(0,15,0,15);
+        lengthOfScreen = new LabelAndField(
+                localManager, LENGTH_MAIN_SCREEN, 5, 20, 1000);
+
+        thisPanel.add(lengthOfScreen.get(), gbc);
+        gbc.gridwidth++;
+        fieldMap.put(LENGTH_MAIN_SCREEN, lengthOfScreen.get());
 
 
-        addCustomButton(3, 0, 2, "Save Settings", a -> saveSettings());
+        widthOfScreen = new LabelAndField(
+                localManager, WIDTH_MAIN_SCREEN, 5, 20, 600);
+        thisPanel.add(widthOfScreen.get(), gbc);
+        gbc.gridwidth++;
+        fieldMap.put(WIDTH_MAIN_SCREEN, widthOfScreen.get());
 
-        addCustomButton(4, 0, 2, "Add Template", a -> manager.addTemplate(tabPane));
 
-        addCustomButton(5, 0, 2, "Remove Template", a -> manager.removeTemplate(tabPane));
+        fontSize = new LabelAndField(
+                localManager, FONT_SIZE, 5, 20, 20);
+        thisPanel.add(fontSize.get(), gbc);
+        fieldMap.put(FONT_SIZE, fontSize.get());
 
+
+        dropDownLanguage = new LabelAndDropDown(localManager, LANGUAGE);
+        thisPanel.add(dropDownLanguage.get(), gbc);
+        fieldMap.put(LANGUAGE, dropDownLanguage.get());
+
+
+        addCustomButton(4, 2, 2,
+                localManager.getLocalStringBy(SAVE_SETTINGS), a -> saveSettings());
+
+
+//        addCustomButton(5, 0, 2, "Add Template", a -> manager.addTemplate(tabPane));
+//
+//        addCustomButton(6, 0, 2, "Remove Template", a -> manager.removeTemplate(tabPane));
 
     }
 
@@ -83,29 +99,6 @@ public class SettingsTab extends JPanel {
         thisPanel.add(button, gbc);
     }
 
-    private void addCustomRowOfTextAndField(
-            int numRow,
-            int numColumn,
-            int gridWidth,
-            String textOfLabel,
-            int defaultValue,
-            int quantityColumnsForTextField,
-            int filter) {
-
-        String formattedTextOfLabel = new StringFormatter().formatedForKey(textOfLabel);
-
-        gbc.gridy = numRow;
-        gbc.gridx = numColumn;
-        gbc.gridwidth = gridWidth;
-        Tab tab = new Tab(textOfLabel);
-        JTextField customField = new CustomField(quantityColumnsForTextField, filter);
-
-        customField.setText(String.valueOf(AppProperties.getNum(formattedTextOfLabel, defaultValue)));
-
-        fieldMap.put(new StringFormatter().formatedForKey(formattedTextOfLabel), customField);
-        thisPanel.add(new RowOfTextAndField(tab, customField), gbc);
-    }
-
     private void createPanel() {
         thisPanel = new JPanel(new GridBagLayout());
         thisPanel.setLayout(new GridBagLayout());
@@ -116,22 +109,41 @@ public class SettingsTab extends JPanel {
     }
 
     private void saveSettings() {
-        System.out.println("method saveSetting from SettingsTab ");
-        // Обновление значений в settings перед сохранением в файл
-        for (Map.Entry<String, JTextField> entry : fieldMap.entrySet()) {
-            settings.setProperty(entry.getKey(), entry.getValue().getText());
+        System.out.println("method saveSettings from SettingsTab");
+
+        // Сохраняем текущие значения в properties
+        for (Map.Entry<String, JComponent> entry : fieldMap.entrySet()) {
+            String value = ((RowComponent) entry.getValue()).getField();
+            RowComponent g = ((RowComponent) entry.getValue());
+
+            if (entry.getKey().equals("language")) {
+                if (localManager.getLocalStringBy("english").equals(value)) {
+                    AppProperties.setProperty("local", "en");
+                } else if (localManager.getLocalStringBy("polish").equals(value)) {
+                    AppProperties.setProperty("local", "pl");
+                } else if (localManager.getLocalStringBy("ukrainian").equals(value)) {
+                    AppProperties.setProperty("local", "ua");
+                } else if (localManager.getLocalStringBy("russian").equals(value)) {
+                    AppProperties.setProperty("local", "ru");
+                }
+                mainView.changeLanguage();
+
+            } else {
+                String key = entry.getKey();
+                String formatedKey = new StringFormatter().formatedForKey(key);
+                AppProperties.setProperty(formatedKey, value);
+
+                mainView.changeProperties();
+            }
         }
 
-        try (FileOutputStream out = new FileOutputStream(SETTINGS_FILE)) {
-            settings.store(out, "Application Settings");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mainView.fillSavedSettingTab();
+
     }
 
     private void loadSettings() {
         try (FileInputStream in = new FileInputStream(SETTINGS_FILE)) {
-            settings.load(in);
+            AppProperties.load(in);
         } catch (IOException e) {
             // If file does not exist, default settings will be used
         }

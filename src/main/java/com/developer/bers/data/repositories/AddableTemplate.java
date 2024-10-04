@@ -1,7 +1,6 @@
 package com.developer.bers.data.repositories;
 
 import com.developer.bers.domain.repositories.PressButtonAddTemplate;
-import com.developer.bers.presentation.MainView;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -37,7 +36,7 @@ public class AddableTemplate implements PressButtonAddTemplate {
         JLabel filePathLabel = new JLabel(settings.getProperty("file.path", "No file selected"));
 
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Word Documents", "docx"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Word Documents", "docs"));
         int returnValue = fileChooser.showOpenDialog(settingsDialog);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();

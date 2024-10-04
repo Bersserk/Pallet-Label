@@ -1,0 +1,68 @@
+documents:
+  Sent Label.docx:
+    - text: "Product name"
+      font_size: 72
+      max_chars: 20
+      hint: "Product name"
+      input_type: "all"
+    - text: "Destination"
+      font_size: 48
+      max_chars: 10
+      hint: "Purpose of the destination"
+      input_type: "all"
+    - text: "Day"
+      font_size: 48
+      max_chars: 10
+      hint: "Day of the delivery"
+      input_type: "[0-9,.]"
+    - text: "Time"
+      font_size: 48
+      max_chars: 5
+      hint: "Time of delivery"
+      input_type: "[0-9,:]"
+    - text: "Code"
+      font_size: 48
+      max_chars: 20
+      hint: "Code of product"
+      input_type: "all"
+    - text: "Consumer"
+      font_size: 48
+      max_chars: 11
+      hint: "Write Consumer's name"
+      input_type: "all"
+    - text: "Today"
+      font_size: 36
+      max_chars: 10
+      hint: "Get the data today"
+      input_type: "[0-9,.]"
+    - text: "Quality"
+      font_size: 36
+      max_chars: 5
+      hint: "Quality"
+      input_type: "all"
+    - text: "Count"
+      font_size: 140
+      max_chars: 4
+      hint: "Set count"
+      input_type: "[0-9,]"
+    - text: "Lot"
+      font_size: 100
+      max_chars: 14
+      hint: "Set a lot number"
+      input_type: "[0-9,/]"
+
+
+
+  document2:
+    - text: "строка 1"
+      font_size: 14
+      max_chars: 20
+      input_type: "digits"
+    - text: "строка 2"
+      font_size: 18
+      max_chars: 10
+      input_type: "digits"
+    - text: "строка 3"
+      font_size: 24
+      max_chars: 7
+      input_type: "all"

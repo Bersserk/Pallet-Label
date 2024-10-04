@@ -13,5 +13,6 @@ public class Main {
     private static void run() {
         MainView ex = new MainView();
         ex.setVisible(true);
+
     }
 }
